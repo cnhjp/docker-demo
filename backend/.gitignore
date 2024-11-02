@@ -1,0 +1,23 @@
+# Node.js
+node_modules/
+npm-debug.log
+.npmrc
+
+# Operating System
+.DS_Store
+Thumbs.db
+
+# Editors
+*.swp
+
+# Build output
+dist/
+build/
+
+# Environment variables
+.env
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
