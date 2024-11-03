@@ -4,10 +4,11 @@ import { useState } from "react";
 
 function App() {
   const [message, setMessage] = useState("");
-  function fetchMessage() {
-    fetch("http://localhost:5000/api/message")
-      .then((response) => response.json())
-      .then((data) => setMessage(data.message));
+
+  async function fetchMessage() {
+    const res = await fetch("http://localhost:5000/api/message");
+    const data = await res.json();
+    setMessage(data.message);
   }
 
   return (
