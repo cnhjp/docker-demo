@@ -13,9 +13,18 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Build Docker image
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Build and Push Docker images
       run: |
-        docker-compose up --build
+        # Build and push the backend image
+        docker build -t cnhjp/backend:latest -f backend/Dockerfile backend/
+        docker push cnhjp/backend:latest
+
+        # Build and push the frontend image
+        docker build -t cnhjp/frontend:latest -f frontend/Dockerfile frontend/
+        docker push cnhjp/frontend:latest
 
     - name: Log in to Docker Hub
       uses: docker/login-action@v1
@@ -23,12 +32,10 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Push Docker image
-      run: |
-        docker push cnhjp/docker-demo:latest
-
     - name: Deploy to Server
       run: |
-        ssh root@${{ secrets.SSH_IP }} "docker pull cnhjp/docker-demo:latest && docker-compose up -d"
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > id_rsa
+        chmod 600 id_rsa
+        eval "$(ssh-agent -s)"
+        ssh-add id_rsa
+        ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_IP }} "docker pull cnhjp/backend:latest && docker pull cnhjp/frontend:latest && docker-compose up -d"
