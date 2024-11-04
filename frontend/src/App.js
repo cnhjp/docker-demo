@@ -6,7 +6,9 @@ function App() {
   const [message, setMessage] = useState("");
 
   async function fetchMessage() {
-    const res = await fetch(`http://${window.location.host}:5000/api/message`);
+    const res = await fetch(
+      `http://${window.location.hostname}:5000/api/message`
+    );
     const data = await res.json();
     setMessage(data.message);
   }
