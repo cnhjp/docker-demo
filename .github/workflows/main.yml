@@ -38,4 +38,4 @@ jobs:
           chmod 600 id_rsa
           eval "$(ssh-agent -s)"
           ssh-add id_rsa
-          ssh -o StrictHostKeyChecking=no -p 28140 root@${{ secrets.SSH_IP }} "docker pull cnhjp/demo-:latest && docker pull cnhjp/demo-frontend:latest && docker run cnhjp/demo-frontend && docker run cnhjp/demo-backend"
+          ssh -o StrictHostKeyChecking=no -p 28140 root@${{ secrets.SSH_IP }} "docker pull cnhjp/demo-backend:latest && docker pull cnhjp/demo-frontend:latest && docker run cnhjp/demo-frontend && docker run cnhjp/demo-backend"
