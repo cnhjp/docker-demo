@@ -3,41 +3,39 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # 监听main分支的推送
+      - main # 监听main分支的推送
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Build and Push Docker images
+        run: |
+          # Build and push the backend image
+          docker build -t cnhjp/demo-backend:latest -f backend/Dockerfile backend/
+          docker push cnhjp/demo-backend:latest
 
-    - name: Build and Push Docker images
-      run: |
-        # Build and push the backend image
-        docker build -t cnhjp/backend:latest -f backend/Dockerfile backend/
-        docker push cnhjp/backend:latest
+          # Build and push the frontend image
+          docker build -t cnhjp/demo-frontend:latest -f frontend/Dockerfile frontend/
+          docker push cnhjp/demo-frontend:latest
 
-        # Build and push the frontend image
-        docker build -t cnhjp/frontend:latest -f frontend/Dockerfile frontend/
-        docker push cnhjp/frontend:latest
-
-
-    - name: Deploy to Server
-      run: |
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > id_rsa
-        chmod 600 id_rsa
-        eval "$(ssh-agent -s)"
-        ssh-add id_rsa
-        ssh -o StrictHostKeyChecking=no -p 28140 root@${{ secrets.SSH_IP }} "docker pull cnhjp/backend:latest && docker pull cnhjp/frontend:latest && docker-compose up -d"
+      - name: Deploy to Server
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > id_rsa
+          chmod 600 id_rsa
+          eval "$(ssh-agent -s)"
+          ssh-add id_rsa
+          ssh -o StrictHostKeyChecking=no -p 28140 root@${{ secrets.SSH_IP }} "docker pull cnhjp/demo-:latest && docker pull cnhjp/demo-frontend:latest && docker run cnhjp/demo-frontend && docker run cnhjp/demo-backend"
