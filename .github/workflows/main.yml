@@ -47,5 +47,5 @@ jobs:
             docker image rm cnhjp/demo-frontend || true && \
             docker pull cnhjp/demo-backend && \
             docker pull cnhjp/demo-frontend && \
-            docker run -d --name demo-frontend -p 8080:8080 cnhjp/demo-frontend && \
+            docker run -d --name demo-frontend -p 8080:80 cnhjp/demo-frontend && \
             docker run -d --name demo-backend -p 5000:5000 cnhjp/demo-backend"
