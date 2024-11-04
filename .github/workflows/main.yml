@@ -39,11 +39,13 @@ jobs:
           eval "$(ssh-agent -s)"
           ssh-add id_rsa
           ssh -o StrictHostKeyChecking=no -p ${{ secrets.TCT_SSH_PORT }} root@${{ secrets.TCT_SSH_IP }} "
-            docker pull cnhjp/demo-backend:latest && \
-            docker pull cnhjp/demo-frontend:latest && \
             docker stop demo-frontend || true && \
             docker rm demo-frontend || true && \
             docker stop demo-backend || true && \
             docker rm demo-backend || true && \
+            docker image rm cnhjp/demo-backend || true && \
+            docker image rm cnhjp/demo-frontend || true && \
+            docker pull cnhjp/demo-backend && \
+            docker pull cnhjp/demo-frontend && \
             docker run -d --name demo-frontend -p 8080:8080 cnhjp/demo-frontend && \
             docker run -d --name demo-backend -p 5000:5000 cnhjp/demo-backend"
