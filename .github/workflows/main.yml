@@ -27,7 +27,7 @@ jobs:
           # Build and push the backend image
           docker build -t cnhjp/demo-backend:latest -f backend/Dockerfile backend/
           docker push cnhjp/demo-backend:latest
-z`
+
           # Build and push the frontend image
           docker build -t cnhjp/demo-frontend:latest -f frontend/Dockerfile frontend/
           docker push cnhjp/demo-frontend:latest
