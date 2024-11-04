@@ -27,7 +27,7 @@ jobs:
           # Build and push the backend image
           docker build -t cnhjp/demo-backend:latest -f backend/Dockerfile backend/
           docker push cnhjp/demo-backend:latest
-
+z`
           # Build and push the frontend image
           docker build -t cnhjp/demo-frontend:latest -f frontend/Dockerfile frontend/
           docker push cnhjp/demo-frontend:latest
@@ -46,4 +46,4 @@ jobs:
             docker stop demo-backend || true && \
             docker rm demo-backend || true && \
             docker run -d --name demo-frontend -p 80:80 cnhjp/demo-frontend && \
-            docker run -d --name demo-backend cnhjp/demo-backend"
+            docker run -d --name demo-backend -p 5000:5000 cnhjp/demo-backend"
